@@ -1,5 +1,11 @@
 const POLL_INTERVAL_MS = 60 * 1000;       // Check every minute
 const HEARTBEAT_MS = 15 * 60 * 1000;      // Force a snapshot every 15 minutes
+const API_BASE = "http://127.0.0.1:8787";
+
+const ENDPOINTS = {
+    ingest: `${API_BASE}/ingest`,
+    scoreboard: `${API_BASE}/scoreboard`
+};
 
 let lastStatsJson = null;
 let lastHeartbeat = 0;
@@ -45,8 +51,10 @@ function extractStats() {
 
 async function maybeSendStats() {
     const stats = extractStats();
+    console.log(`[MakerWorld Scoreboard] Polling MakerWorld stats...`);
 
     if (!stats) {
+      console.log(`[MakerWorld Scoreboard] Poll skipped: no stats extracted.`);
         return;
     }
 
@@ -57,12 +65,12 @@ async function maybeSendStats() {
     const heartbeatExpired = (now - lastHeartbeat) > HEARTBEAT_MS;
 
     if (!statsChanged && !heartbeatExpired) {
-        console.log("[Scoreboard] No changes.");
+        console.log("[MakerWorld Scoreboard] No changes.");
         return;
     }
 
     try {
-        const response = await fetch("http://localhost:8787/ingest", {
+        const response = await fetch(ENDPOINTS.ingest, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -78,7 +86,7 @@ async function maybeSendStats() {
         lastHeartbeat = now;
 
     } catch (err) {
-        console.error(err);
+        console.error("[MakerWorld Scoreboard] Failed to send snapshot.", err);
     }
 }
 

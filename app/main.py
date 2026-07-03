@@ -16,7 +16,11 @@ app = FastAPI(title="MakerWorld Scoreboard API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://makerworld.com", "http://localhost:8787"],
+    allow_origins=[
+    "https://makerworld.com",
+    "http://localhost:8787",
+    "http://127.0.0.1:8787",
+    ],
     allow_origin_regex=r"chrome-extension://.*",
     allow_credentials=False,
     allow_methods=["*"],

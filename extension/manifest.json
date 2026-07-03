@@ -5,8 +5,9 @@
   "description": "Collects MakerWorld stats from the loaded profile page and sends them to a local scoreboard server.",
   "permissions": [],
   "host_permissions": [
-    "https://makerworld.com/*",
-    "http://localhost:8787/*"
+      "https://makerworld.com/*",
+      "http://localhost:8787/*",
+      "http://127.0.0.1:8787/*"
   ],
   "content_scripts": [
     {
