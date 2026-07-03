@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "MakerWorld Scoreboard Collector",
+  "version": "0.1.0",
+  "description": "Collects MakerWorld stats from the loaded profile page and sends them to a local scoreboard server.",
+  "permissions": [],
+  "host_permissions": [
+    "https://makerworld.com/*",
+    "http://localhost:8787/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://makerworld.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
