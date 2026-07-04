@@ -17,7 +17,8 @@ from app.services.event_service import (
     generate_stat_change_events,
     persist_events,
 )
-
+from app.services.achievement_service import generate_achievements, persist_achievements
+from app.services.delta_service import build_dashboard_summary
 
 def process_snapshot(stats: MakerWorldStats):
     received_at = datetime.now().isoformat()
@@ -44,10 +45,23 @@ def process_snapshot(stats: MakerWorldStats):
         events = generate_stat_change_events(previous_snapshot, latest_snapshot)
         event_ids = persist_events(conn, events)
 
+        dashboard = build_dashboard_summary(conn)
+        today_deltas = dashboard.get("deltas", {}).get("today", {})
+
+        achievements = generate_achievements(
+            conn=conn,
+            previous_snapshot=previous_snapshot,
+            latest_snapshot=latest_snapshot,
+            today_deltas=today_deltas,
+        )
+        achievement_ids = persist_achievements(conn, achievements)
+
     return {
         "ok": True,
         "snapshotId": snapshot_id,
         "eventIds": event_ids,
         "eventCount": len(event_ids),
+        "achievementIds": achievement_ids,
+        "achievementCount": len(achievement_ids),
         "receivedAt": received_at,
     }

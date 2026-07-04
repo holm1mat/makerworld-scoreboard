@@ -1,4 +1,4 @@
-const POLL_INTERVAL_MS = 60 * 1000;       // Check every minute
+const PAGE_REFRESH_INTERVAL_MS = 5 * 60 * 1000; // every 5 minutes
 const HEARTBEAT_MS = 15 * 60 * 1000;      // Force a snapshot every 15 minutes
 const API_BASE = "http://127.0.0.1:8787";
 
@@ -91,7 +91,10 @@ async function maybeSendStats() {
 }
 
 setTimeout(() => {
-    maybeSendStats();
-
-    setInterval(maybeSendStats, POLL_INTERVAL_MS);
+  maybeSendStats();
 }, 3000);
+
+setTimeout(() => {
+  console.log("[MakerWorld] Refreshing MakerWorld page to fetch fresh stats...");
+  window.location.reload();
+}, PAGE_REFRESH_INTERVAL_MS);

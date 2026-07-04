@@ -11,6 +11,7 @@ from app.services.delta_service import build_dashboard_summary, build_scoreboard
 from app.services.ingest_service import process_snapshot
 from app.repositories.snapshot_repository import get_recent_snapshots
 from app.repositories.event_repository import get_recent_events
+from app.repositories.achievement_repository import get_recent_achievements
 
 app = FastAPI(title="MakerWorld Scoreboard API")
 
@@ -79,3 +80,9 @@ def dashboard():
 def scoreboard():
     with get_connection() as conn:
         return build_scoreboard_response(conn)
+
+
+@app.get("/achievements")
+def achievements(limit: int = 25):
+    with get_connection() as conn:
+        return get_recent_achievements(conn, limit)

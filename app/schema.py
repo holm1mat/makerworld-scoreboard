@@ -31,3 +31,18 @@ def init_db():
                 message TEXT
             )
         """)
+
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS achievements (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                created_at TEXT NOT NULL,
+                achievement_type TEXT NOT NULL,
+                stat TEXT NOT NULL,
+                threshold INTEGER,
+                current_value INTEGER,
+                delta INTEGER,
+                priority TEXT NOT NULL,
+                message TEXT NOT NULL,
+                seen_at TEXT
+            )
+        """)
