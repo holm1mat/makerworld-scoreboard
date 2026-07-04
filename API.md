@@ -116,7 +116,7 @@ Example response:
     "old_value": 32810,
     "new_value": 32812,
     "delta": 2,
-    "message": "❤️ +2 Likes"
+    "message": "+2 Likes"
   }
 ]
 ```
@@ -140,7 +140,7 @@ Example response:
     "current_value": 2124,
     "delta": 1,
     "priority": "takeover",
-    "message": "🚀 Boost received!",
+    "message": "Boost received!",
     "seen": 0
   }
 ]

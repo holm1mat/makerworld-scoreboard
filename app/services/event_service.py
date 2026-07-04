@@ -6,43 +6,37 @@ STAT_META = {
     "likes": {
         "singular": "Like",
         "plural": "Likes",
-        "emoji": "❤️",
-        "color": "#E74C3C",
+        "color": "#FF4D4D",
         "icon": "heart"
     },
     "collects": {
         "singular": "Collect",
         "plural": "Collects",
-        "emoji": "📁",
-        "color": "#F39C12",
+        "color": "#FFC61A",
         "icon": "folder"
     },
     "downloads": {
         "singular": "Download",
         "plural": "Downloads",
-        "emoji": "⬇️",
-        "color": "#3498DB",
+        "color": "#23B5FF",
         "icon": "download"
     },
     "prints": {
         "singular": "Print",
         "plural": "Prints",
-        "emoji": "🖨️",
-        "color": "#9B59B6",
+        "color": "#39E75F",
         "icon": "printer"
     },
     "boosts": {
         "singular": "Boost",
         "plural": "Boosts",
-        "emoji": "🚀",
-        "color": "#2ECC71",
+        "color": "#B05CFF",
         "icon": "rocket"
     },
     "followers": {
         "singular": "Follower",
         "plural": "Followers",
-        "emoji": "👥",
-        "color": "#1ABC9C",
+        "color": "#35D8FF",
         "icon": "users"
     }
 }
@@ -71,12 +65,11 @@ def generate_stat_change_events(previous: dict | None, latest: dict) -> list[dic
 
         singular = meta["singular"]
         plural = meta["plural"]
-        emoji = meta["emoji"]
 
         label = singular if abs(delta) == 1 else plural
         sign = "+" if delta > 0 else ""
 
-        message = f"{emoji} {sign}{delta} {label}"
+        message = f"{sign}{delta} {label}"
 
         events.append(
             {
