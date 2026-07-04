@@ -43,6 +43,6 @@ def init_db():
                 delta INTEGER,
                 priority TEXT NOT NULL,
                 message TEXT NOT NULL,
-                seen_at TEXT
+                seen INTEGER NOT NULL DEFAULT 0
             )
         """)

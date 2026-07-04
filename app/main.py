@@ -11,7 +11,7 @@ from app.services.delta_service import build_dashboard_summary, build_scoreboard
 from app.services.ingest_service import process_snapshot
 from app.repositories.snapshot_repository import get_recent_snapshots
 from app.repositories.event_repository import get_recent_events
-from app.repositories.achievement_repository import get_recent_achievements
+from app.repositories.achievement_repository import get_recent_achievements, get_pending_achievements, mark_achievement_seen
 
 app = FastAPI(title="MakerWorld Scoreboard API")
 
@@ -86,3 +86,18 @@ def scoreboard():
 def achievements(limit: int = 25):
     with get_connection() as conn:
         return get_recent_achievements(conn, limit)
+    
+
+@app.get("/achievements/pending")
+def pending_achievements():
+    with get_connection() as conn:
+        return get_pending_achievements(conn)
+    
+
+@app.patch("/achievements/{achievement_id}/seen")
+def mark_achievement_seen_endpoint(achievement_id: int):
+    with get_connection() as conn:
+        mark_achievement_seen(conn, achievement_id)
+        conn.commit()
+
+    return {"ok": True}

@@ -16,9 +16,9 @@ def insert_achievement(
         """
         INSERT INTO achievements (
             created_at, achievement_type, stat, threshold,
-            current_value, delta, priority, message, seen_at
+            current_value, delta, priority, message, seen
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)
         """,
         (
             created_at,
@@ -34,8 +34,12 @@ def insert_achievement(
     return cursor.lastrowid
 
 
-def get_recent_achievements(conn: sqlite3.Connection, limit: int = 25) -> list[dict]:
+def get_recent_achievements(
+    conn: sqlite3.Connection,
+    limit: int = 25,
+) -> list[dict]:
     conn.row_factory = sqlite3.Row
+
     rows = conn.execute(
         """
         SELECT *
@@ -46,7 +50,40 @@ def get_recent_achievements(conn: sqlite3.Connection, limit: int = 25) -> list[d
         (limit,),
     ).fetchall()
 
-    return [dict(row) for row in rows]
+    achievements = []
+
+    for row in rows:
+        achievement = dict(row)
+        achievement["seen"] = bool(achievement["seen"])
+        achievements.append(achievement)
+
+    return achievements
+
+
+def get_pending_achievements(
+    conn: sqlite3.Connection,
+    limit: int = 10,
+):
+    conn.row_factory = sqlite3.Row
+
+    rows = conn.execute(
+        """
+        SELECT *
+        FROM achievements
+        WHERE seen = 0
+        ORDER BY id
+        LIMIT ?
+        """,
+        (limit,),
+    ).fetchall()
+
+    return [
+        {
+            **dict(row),
+            "seen": bool(row["seen"])
+        }
+        for row in rows
+    ]
 
 
 def achievement_exists_today(conn: sqlite3.Connection, achievement_type: str, day_prefix: str) -> bool:
@@ -62,3 +99,17 @@ def achievement_exists_today(conn: sqlite3.Connection, achievement_type: str, da
     ).fetchone()
 
     return row is not None
+
+
+def mark_achievement_seen(
+    conn: sqlite3.Connection,
+    achievement_id: int,
+) -> None:
+    conn.execute(
+        """
+        UPDATE achievements
+        SET seen = 1
+        WHERE id = ?
+        """,
+        (achievement_id,),
+    )
